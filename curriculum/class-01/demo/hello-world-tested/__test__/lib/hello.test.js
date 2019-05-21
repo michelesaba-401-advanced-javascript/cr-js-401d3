@@ -1,40 +1,25 @@
 'use strict';
 
-// Require the module under test
-const hello = require('../../lib/hello.js');
+const hello = require('../../lib/hello');
 
-describe('Hello', () => {
+describe('sayHello', () => {
+  it('returns hello john given john', () => {
+    const res = hello.sayHello('john');
 
-  // Tests are documentation.  Is there any need to comment what these are doing?  NOT.
-  it('requires one param', () => {
-    let message = hello.sayHello();
-    expect(message).toBeNull();
+    expect(res).toBe('hello john');
   });
 
-  it('only allows one param', () => {
-    let message = hello.sayHello('john','cathy');
-    expect(message).toBeNull();
-  });
+  it ('returns hello bob given bob', () => {
+    const res = hello.sayHello('bob');
 
-  it('does not allow numeric values', () => {
-    let message = hello.sayHello(1);
-    expect(message).toBeNull();
+    expect(res).toBe('hello bob');
   });
+});
 
-  it('does not allow arrays as a param', () => {
-    let message = hello.sayHello([]);
-    expect(message).toBeNull();
+describe('sayGoodbye', () => {
+  it ('returns goodbye', () =>{
+    const res = hello.sayGoodbye();
+
+    expect(res).toBe('Goodbye');
   });
-
-  it('does not allow objects as a param', () => {
-    let message = hello.sayHello({});
-    expect(message).toBeNull();
-  });
-
-  it('works when given a word', () => {
-    var message = hello.sayHello('John');
-    var expectedOutput = 'Hello, John';
-    expect(message).toEqual(expectedOutput);
-  });
-
 });

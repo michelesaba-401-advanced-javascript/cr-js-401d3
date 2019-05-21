@@ -1,33 +1,36 @@
 'use strict';
 
-// Animal Class
 class Animal {
-
-  // When creating a new animal, store it's name
   constructor(name) {
     this.name = name;
+    console.log('this inside Animal', this);
   }
 
-  // All animals can walk.  This will be a prototype method
   walk() {
-    console.log('Walking ... ');
+    console.log('Walking...with class');
   }
 
+  toString() {
+    return `Animal: ${this.name}`;
+  }
 }
 
-// Dogs are animals (extends)
 class Dog extends Animal {
+  constructor(name, age) {
+    super(name);
 
-  // Only dogs can speak.  This will also be a prototype method.
+    this.age = age;
+    this.hungry = true;
+    console.log('this inside Dog', this);
+  }
+
   speak() {
-    console.log('WOOF!');
+    console.log(`My name is ${this.name}`);
   }
 
-  // Calling the Animal walk() method when dogs run()
-  run() {
-    super.walk();
+  toString() {
+    return `Dog: ${this.name}`;
   }
-
 }
 
 module.exports = Dog;

@@ -10,21 +10,41 @@
  * of comparison.
  */
 
-// const dogClass = require('./class.js');
-const dogFactory = require('./factory.js');
-// const dogConstructor = require('./constructor.js');
+//const Dog = require('./constructor');
+// const Dog = require('./class');
+const dogFactory = require('./factory');
 
-// const rosieViaConstructor = new dogConstructor("Rosie");
-// console.log(rosieViaConstructor);
-// rosieViaConstructor.walk();
-// rosieViaConstructor.speak();
+// var doggy = new Dog('Jeff');
+var doggy = dogFactory('Spike');
+doggy.walk();
+doggy.speak();
+console.log(doggy.toString())
 
-const rosieViaFactory = dogFactory("Rosie");
-console.log(rosieViaFactory);
-rosieViaFactory.walk();
-rosieViaFactory.speak();
+// console.log(doggy);
 
-// const rosieViaClass = new dogClass("Rosie");
-// console.log(rosieViaClass);
-// rosieViaClass.walk();
-// rosieViaClass.speak();
+var speakDoggy = doggy.speak;
+console.log(speakDoggy);
+// speakDoggy(); // Breaks: no this!
+
+var boundSpeakDoggy = speakDoggy.bind(doggy);
+console.log('bound function', boundSpeakDoggy);
+boundSpeakDoggy('Keith');
+
+speakDoggy.call({
+  name: 'Call Me'
+}, 'Floyd');
+
+speakDoggy.apply({
+  name: 'Apply Me'
+}, ['Alexander']);
+
+console.log(Math.max(5,6,1,85,1,43));
+
+var numbers = [123,123,5324,235,12,32,1];
+// Doesn't work - NaN!
+console.log(Math.max(numbers));
+
+console.log(Math.max.apply(null, numbers))
+
+// Or in newer JS, can use spread instead
+console.log(Math.max(...numbers));
