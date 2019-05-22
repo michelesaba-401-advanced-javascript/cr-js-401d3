@@ -24,4 +24,52 @@ describe('File Reader Module', () => {
       done();
     })
   })
+
+  describe('with Promise', () => {
+    it('resolves with data', () => {
+      let file = `${__dirname}/../../data/file.txt`;
+
+      return reader(file)
+        .then(data => {
+          expect(data).toBeDefined();
+        });
+    });
+
+    it ('rejects with err', () => {
+      let file = `${__dirname}/../../data/missing.txt`;
+
+      return expect(reader(file))
+        .rejects.toBeDefined();
+
+      // return reader(file)
+      //   .then(data => {
+      //     return Promise.reject(); // Reject with nothing to force failure
+      //   })
+      //   .catch(err => {
+      //     expect(err).toBeDefined();
+      //   });
+    })
+  });
+
+  describe('with async/await', () => {
+    it('can await data', async () => {
+      let file = `${__dirname}/../../data/file.txt`;
+
+      let data = await reader(file);
+
+      expect(data).toBeDefined();
+    });
+
+    it('can error with bad file name', async() => {
+      let file = `${__dirname}/../../data/missing.txt`;
+
+      try {
+        let data = await reader(file);
+        expect(data).not.toBeDefined();
+      }
+      catch(err){
+        expect(err).toBeDefined();
+      }
+    });
+  });
 });
