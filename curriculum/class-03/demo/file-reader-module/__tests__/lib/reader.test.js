@@ -1,38 +1,75 @@
 'use strict';
 
-// When mocking out embedded modules like fs or buffer, you have to tell jest to mock it
-// For 3rd party modules, you can "auto" mock them by simply putting them in the correct __mocks__ folder
-jest.mock('fs');
-
 const reader = require('../../lib/reader.js');
-
-// Notice the use of done as a param to the it() block, and calling done() within the async functions
 
 describe('File Reader Module', () => {
 
-  it('when given a bad file, returns an error', (done) => {
-    // Note that the actual path here doesn't really matter.
-    // If we weren't mocking, it would.  The "fs" module would need
-    // to find the actual file.
-    //
-    // Also note that this file is named "bad.txt".  Our mock fs module
-    // will always return an error if a file has the word "bad" in its name
-    let file = `${__dirname}/../../data/bad.txt`;
-    reader(file, (err,data) => {
+  it('can read a file', done => {
+    let file = `${__dirname}/../../data/file.txt`;
+    // let file = `./data/file.txt`; // This works, too, but only by luck
+    console.log(file);
+
+    reader(file, (err, data) => {
+      expect(err).toBeNull();
+      expect(data).toBeDefined();
+      done();
+    });
+  });
+
+  it('calls callback with error for bad file', done => {
+    let file = `${__dirname}/../../data/missing.txt`;
+
+    reader(file, (err) => {
       expect(err).toBeDefined();
       done();
+    })
+  })
+
+  describe('with Promise', () => {
+    it('resolves with data', () => {
+      let file = `${__dirname}/../../data/file.txt`;
+
+      return reader(file)
+        .then(data => {
+          expect(data).toBeDefined();
+        });
     });
+
+    it ('rejects with err', () => {
+      let file = `${__dirname}/../../data/missing.txt`;
+
+      return expect(reader(file))
+        .rejects.toBeDefined();
+
+      // return reader(file)
+      //   .then(data => {
+      //     return Promise.reject(); // Reject with nothing to force failure
+      //   })
+      //   .catch(err => {
+      //     expect(err).toBeDefined();
+      //   });
+    })
   });
 
-  it('when given a real file, returns the contents', (done) => {
-    let file = `${__dirname}/../../data/file1.txt`;
-    reader(file, (err,data) => {
-      expect(err).toBeUndefined();
-      // We don't need to care what the text is, only that we got back a string
-      // That's the interface of our reader module: Give a file+cb, get back stringified  contents
-      expect(typeof data).toBe('string');
-      done();
+  describe('with async/await', () => {
+    it('can await data', async () => {
+      let file = `${__dirname}/../../data/file.txt`;
+
+      let data = await reader(file);
+
+      expect(data).toBeDefined();
+    });
+
+    it('can error with bad file name', async() => {
+      let file = `${__dirname}/../../data/missing.txt`;
+
+      try {
+        let data = await reader(file);
+        expect(data).not.toBeDefined();
+      }
+      catch(err){
+        expect(err).toBeDefined();
+      }
     });
   });
-
 });

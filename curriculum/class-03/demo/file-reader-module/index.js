@@ -3,6 +3,7 @@
 const fileReader = require('./lib/reader.js');
 
 let file = `${__dirname}/data/file.txt`;
+console.log('file', file);
 
 // A simple error first callback
 let doSomething = (err,data) => {
